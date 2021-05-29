@@ -3,7 +3,6 @@ import Peer from './peer';
 import MessageService from './services/message.service';
 import { IDiscogramConfig, IPeerConfig } from './constants';
 
-
 export class Discogram extends EventEmitter {
     public peers: Peer[]
     private messageServce: MessageService;
