@@ -1,2 +1,2 @@
 # discogram
-simple peer discovery using telegram service.
+simple peer discovery using telegram bots.
