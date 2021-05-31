@@ -1,19 +1,24 @@
 import * as SimplePeer from 'simple-peer';
 import * as EventEmitter from 'eventemitter3';
 import { v4 as uuidv4 } from 'uuid';
+import * as Chance from 'chance';
 import MessageService from './services/message.service';
 import { IPeerConfig } from './constants';
 
 export default class Peer extends EventEmitter {
     public peerId: string;
     public initiator: boolean;
+    public requestId: number;
     public peerInstance: SimplePeer.Instance;
     private announced: boolean;
     private messageServce: MessageService;
 
     constructor(config: IPeerConfig) {
         super();
+        const chance = new Chance();
+
         this.peerId = uuidv4();
+        this.requestId = chance.integer();
         this.initiator = config.initiator;
         this.messageServce = MessageService.getInstance();
 
@@ -26,7 +31,7 @@ export default class Peer extends EventEmitter {
         if (!this.initiator) {
             this.announce(false);
         } else {
-            this.sendSignal()
+            this.sendSignal('signal', false)
                 .then(data => this.messageServce.publish(this.peerId, data))
                 .then(() => this.announce(true))
         }
@@ -41,25 +46,24 @@ export default class Peer extends EventEmitter {
         })
     }
 
-    public async request(peerId: string) {
+    public async request(peerId: string, requestId: number) {
         const offer = await this.messageServce.getOffer(peerId);
-        const response = await this.sendSignal(offer);
-        await this.messageServce.publish(this.peerId, { ...response, requestId: offer.requestId });
-        return offer.requestId
+        const response = await this.sendSignal('signal', offer);
+        const message = await this.messageServce.publish(this.peerId, { ...response, requestId });
     }
 
-    public async accept(requestId: string) {
+    public async accept(requestId: number) {
         const answer = await this.messageServce.getAnswer(requestId);
-        this.sendSignal(answer);
+        const connected = await this.sendSignal('connect', answer);
     }
 
-    private sendSignal(signal?): Promise<any> {
+    private sendSignal(key, data): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.peerInstance.on('signal', async (response) => {
+            this.peerInstance.on(key, (response) => {
                 resolve(response)
             });
-            if (signal) {
-                this.peerInstance.signal(signal);
+            if (data) {
+                this.peerInstance.signal(data);
             }
         })
     }

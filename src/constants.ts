@@ -21,5 +21,5 @@ export interface ISignal {
     type: string;
     sdp: string;
     timeStamp: string;
-    requestId: string;
+    requestId: number;
 }
