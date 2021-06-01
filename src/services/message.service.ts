@@ -43,9 +43,13 @@ export default class MessageService {
         return offer;
     }
 
-    async getAnswer(requestId: number) {
+    async getAnswer(initiatorId: string, requestId: string) {
         const signals = await this.getSignals();
-        const answer = signals.find(signal => signal.type === 'answer' && signal.requestId.toString() === requestId.toString());
+        const answer = signals.find(signal => (
+            signal.type === 'answer' &&
+            signal.initiatorId === initiatorId &&
+            signal.requestId === requestId
+        ));
         if (!answer) {
             throw new Error(`No answer found for ${requestId}`);
         }

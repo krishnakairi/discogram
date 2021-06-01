@@ -1,30 +1,29 @@
-import * as EventEmitter from 'eventemitter3';
-import Peer from './peer';
 import MessageService from './services/message.service';
 import { IDiscogramConfig, IPeerConfig } from './constants';
+import Initiator from './initiator';
+import NonInitiator from './non-initiator';
 
-export class Discogram extends EventEmitter {
-    public peers: Peer[]
+export class Discogram {
+    public peers: Array<Initiator | NonInitiator>;
     private messageServce: MessageService;
 
     constructor(config: IDiscogramConfig) {
-        super();
         this.peers = [];
         this.messageServce = MessageService.getInstance();
         this.messageServce.init(config);
     }
 
-    public getPeers(): Peer[] {
+    getPeers(): Array<Initiator | NonInitiator> {
         return this.peers;
     }
 
-    public createPeer(peerConfig: IPeerConfig): Promise<Peer> {
-        return new Promise((resolve, reject) => {
-            const peer = new Peer(peerConfig);
-            peer.on('announced', () => {
-                this.peers.push(peer);
-                resolve(peer);
-            })
-        });
+    async createPeer(peerConfig: IPeerConfig): Promise<Initiator | NonInitiator> {
+        const isInitiator = peerConfig.initiator;
+        const peer = (isInitiator)? new Initiator(peerConfig) : new NonInitiator(peerConfig);
+        if (peer instanceof Initiator) {
+            const announced = await peer.announce();
+        }
+        this.peers.push(peer);
+        return peer;
     }
 }

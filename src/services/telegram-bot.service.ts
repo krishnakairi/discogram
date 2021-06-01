@@ -16,10 +16,10 @@ export class TelegramBotService {
         });
     }
 
-    publishUpdate(messages: string) {
+    publishUpdate(message: string) {
         return this.senderBotClient.post('sendMessage', {
             chat_id: this.channelId,
-            text: messages
+            text: message
         });
     }
 

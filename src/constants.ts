@@ -7,7 +7,7 @@ export interface IDiscogramConfig {
 export interface IPeerConfig {
     stream?: any;
     initiator: boolean;
-    trickle?: boolean;
+    wrtc?: any;
 }
 
 export interface ITelegramBotsInfo {
@@ -19,7 +19,7 @@ export interface ITelegramBotsInfo {
 export interface ISignal {
     id: string;
     type: string;
+    initiatorId: string;
     sdp: string;
-    timeStamp: string;
-    requestId: number;
+    requestId: string;
 }
