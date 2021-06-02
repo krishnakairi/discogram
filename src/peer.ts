@@ -23,23 +23,17 @@ export default class Peer {
 
     destroy() {
         this.peerInstance.removeAllListeners()
-        return this.signal('close', () => {
-            this.peerInstance.destroy();
-        })
+        return this.firstEvent('close', () => this.peerInstance.destroy())
     }
 
     sendSignal(data, responseKey?: string): Promise<any> {
         if (responseKey) {
-            return this.signal(responseKey, () => {
-                this.peerInstance.signal(data);
-            })
-        } else {
-            this.peerInstance.signal(data);
-            return Promise.resolve()
+            return this.firstEvent(responseKey, () => this.peerInstance.signal(data))
         }
+        return Promise.resolve(this.peerInstance.signal(data))
     }
 
-    signal(key: string, cb = () => {}): Promise<any> {
+    firstEvent(key: string, cb = () => {}): Promise<any> {
         return new Promise((resolve, reject) => {
             this.peerInstance.once(key, (response) => {
                 resolve(response)

@@ -1,4 +1,3 @@
-import { get } from 'lodash';
 import { ISignal } from '../constants';
 
 export default class Updates {
@@ -10,15 +9,16 @@ export default class Updates {
 
     toSignals(): ISignal[] {
         return this.updates.map(update => {
-            const text = get(update, 'channel_post.text', '');
-            const [meta, sdp] = text.split('_');
-            const [id, type, initiatorId, key] = meta.split(':');
+            const text = update?.channel_post?.text || '';
+            const key = text.substring(0, 5);
+            const msg = text.substring(5);
+            const [meta = '', sdp = ''] = msg.split('_');
+            const [type, id] = meta.split(':');
             return {
                 id,
                 type,
                 sdp: `${sdp}\r\n`,
-                key,
-                initiatorId
+                key
             }
         });
     }

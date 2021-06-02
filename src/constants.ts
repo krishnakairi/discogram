@@ -19,7 +19,6 @@ export interface ITelegramBotsInfo {
 export interface ISignal {
     id: string;
     type: string;
-    initiatorId: string;
     sdp: string;
     key: string;
 }

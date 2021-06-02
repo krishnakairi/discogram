@@ -47,7 +47,7 @@ export default class MessageService {
         const signals = await this.getSignals();
         const answer = signals.find(signal => (
             signal.type === 'answer' &&
-            signal.initiatorId === initiatorId &&
+            signal.id === initiatorId &&
             signal.key === key
         ));
         if (!answer) {

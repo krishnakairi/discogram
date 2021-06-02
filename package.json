@@ -1,6 +1,6 @@
 {
   "name": "discogram",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "simple peer discovery using telegram bots.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,15 +22,14 @@
   "homepage": "https://github.com/krishnakairi/discogram#readme",
   "dependencies": {
     "axios": "^0.21.1",
-    "chance": "^1.1.7",
     "eventemitter3": "^4.0.7",
-    "lodash": "^4.17.21",
-    "promise-tools": "^2.1.0",
     "simple-peer": "^9.7.2",
+    "unix-time": "^1.0.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
+    "chance": "^1.1.7",
     "chai": "4.1.2",
     "dotenv": "4.0.0",
     "jest": "^27.0.3",

@@ -1,7 +1,13 @@
-import { Discogram } from './../src';
 import * as wrtc from 'wrtc';
+import * as Chance from 'chance';
+import { Discogram } from './../src';
 import Initiator from '../src/initiator';
 import NonInitiator from '../src/non-initiator';
+
+function getRandomKey(): string {
+    const chance = new Chance();
+    return chance.string({ length: 5, casing: 'upper', alpha: true, numeric: true });
+}
 
 describe("Basic Peers Connection", () => {
     let initiatorPeer: Initiator;
@@ -25,14 +31,14 @@ describe("Basic Peers Connection", () => {
     });
 
     it("should allow non-initiator to request using initiator's peerId and key", async () => {
-        await nonInitiatorPeer.request(initiatorPeer.peerId, initiatorPeer.key);
+        key = getRandomKey();
+        await nonInitiatorPeer.request(initiatorPeer.peerId, key);
         expect(nonInitiatorPeer.answer).toBeDefined();
-        key = initiatorPeer.key;
     });
 
     it("should allow initiator to accept request using initiator's key", async () => {
-        const p1$ = initiatorPeer.signal('connect');
-        const p2$ = nonInitiatorPeer.signal('connect');
+        const p1$ = initiatorPeer.firstEvent('connect');
+        const p2$ = nonInitiatorPeer.firstEvent('connect');
 
         await initiatorPeer.accept(key);
 
