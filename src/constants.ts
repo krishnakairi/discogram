@@ -21,5 +21,5 @@ export interface ISignal {
     type: string;
     initiatorId: string;
     sdp: string;
-    requestId: string;
+    key: string;
 }

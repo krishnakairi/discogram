@@ -3,13 +3,13 @@ import Peer from "./peer";
 import * as Chance from 'chance';
 
 export default class Initiator extends Peer {
-    public requestId: string;
+    public key: string;
     public offer: string;
     public announced: boolean;
 
     constructor(config: IPeerConfig) {
         super(config);
-        this.requestId = this.getRequestId();
+        this.key = this.getRandomKey();
     }
 
     async announce() {
@@ -17,21 +17,18 @@ export default class Initiator extends Peer {
         this.offer = data.sdp;
         await this.messageServce.publish(this.peerId, { 
             ...data, 
-            requestId: this.requestId,
+            key: this.key,
             initiatorId: this.peerId,
         });
     }
 
-    private getRequestId(): string {
+    private getRandomKey(): string {
         const chance = new Chance();
         return chance.string({ length: 5, casing: 'upper', alpha: true, numeric: true });
     }
 
-    public async accept(requestId: string): Promise<void> {
-        if (this.requestId !== requestId) {
-            throw new Error('Invalid requestId.')
-        }
-        const answer = await this.messageServce.getAnswer(this.peerId, requestId);
+    public async accept(key: string): Promise<void> {
+        const answer = await this.messageServce.getAnswer(this.peerId, key);
         this.sendSignal(answer);
     }
 }

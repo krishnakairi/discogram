@@ -6,7 +6,7 @@ import NonInitiator from '../src/non-initiator';
 describe("Basic Peers Connection", () => {
     let initiatorPeer: Initiator;
     let nonInitiatorPeer: NonInitiator;
-    let requestId: string;
+    let key: string;
     const discogram = new Discogram({
         channelId: +process.env.DISCOGRAM_CHANNEL_ID,
         receiverBotToken: process.env.DISCOGRAM_RECEIVER_BOT_TOKEN,
@@ -24,17 +24,17 @@ describe("Basic Peers Connection", () => {
         expect(nonInitiatorPeer.answer).toBeUndefined();
     });
 
-    it("should allow non-initiator to request using initiator's peerId and requestId", async () => {
-        await nonInitiatorPeer.request(initiatorPeer.peerId, initiatorPeer.requestId);
+    it("should allow non-initiator to request using initiator's peerId and key", async () => {
+        await nonInitiatorPeer.request(initiatorPeer.peerId, initiatorPeer.key);
         expect(nonInitiatorPeer.answer).toBeDefined();
-        requestId = initiatorPeer.requestId;
+        key = initiatorPeer.key;
     });
 
-    it("should allow initiator to accept request using initiator's requestId", async () => {
+    it("should allow initiator to accept request using initiator's key", async () => {
         const p1$ = initiatorPeer.signal('connect');
         const p2$ = nonInitiatorPeer.signal('connect');
 
-        await initiatorPeer.accept(requestId);
+        await initiatorPeer.accept(key);
 
         await Promise.all([p1$, p2$]);
     

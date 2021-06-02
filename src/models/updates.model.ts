@@ -12,12 +12,12 @@ export default class Updates {
         return this.updates.map(update => {
             const text = get(update, 'channel_post.text', '');
             const [meta, sdp] = text.split('_');
-            const [id, type, initiatorId, requestId] = meta.split(':');
+            const [id, type, initiatorId, key] = meta.split(':');
             return {
                 id,
                 type,
                 sdp: `${sdp}\r\n`,
-                requestId,
+                key,
                 initiatorId
             }
         });

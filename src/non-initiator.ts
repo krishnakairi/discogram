@@ -8,13 +8,13 @@ export default class NonInitiator extends Peer {
         super(config);
     }
 
-    async request(initiatorPeerId: string, initiatorRequestId: string): Promise<void> {
+    async request(initiatorPeerId: string, key: string): Promise<void> {
         const offer = await this.messageServce.getOffer(initiatorPeerId);
         const data = await this.sendSignal(offer, 'signal');
         this.answer = data.sdp;
         await this.messageServce.publish(this.peerId, {
             ...data,
-            requestId: initiatorRequestId,
+            key: key,
             initiatorId: initiatorPeerId
         });
     }
