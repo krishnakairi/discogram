@@ -12,7 +12,7 @@ export interface IPeerConfig {
 }
 
 export interface ITelegramBotsInfo {
-    chennelId: number;
+    channelId: number;
     senderBotToken: string;
     receiverBotToken: string;
     expiresInMins: number;

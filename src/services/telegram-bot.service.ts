@@ -9,8 +9,8 @@ export class TelegramBotService {
     private channelId: number;
     private expiryInMins = 5;
 
-    constructor({ chennelId, senderBotToken, receiverBotToken }: ITelegramBotsInfo) {
-        this.channelId = chennelId;
+    constructor({ channelId, senderBotToken, receiverBotToken }: ITelegramBotsInfo) {
+        this.channelId = channelId;
         this.senderBotClient = axios.create({
             baseURL: `https://api.telegram.org/bot${senderBotToken}`
         });

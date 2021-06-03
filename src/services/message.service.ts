@@ -18,7 +18,7 @@ export default class MessageService {
 
     init(config: IDiscogramConfig) {
         this.telegramBotService = new TelegramBotService({
-            chennelId: config.channelId,
+            channelId: config.channelId,
             senderBotToken: config.senderBotToken,
             receiverBotToken: config.receiverBotToken,
             expiresInMins: config?.expiresInMins || DEFAULT_EXPIRY_IN_MINS
