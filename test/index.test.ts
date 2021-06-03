@@ -32,7 +32,8 @@ describe("Basic Peers Connection", () => {
 
     it("should allow non-initiator to request using initiator's peerId and key", async () => {
         key = getRandomKey();
-        await nonInitiatorPeer.request(initiatorPeer.peerId, key);
+        const { signal, expiresInMs } = await nonInitiatorPeer.getSingal(initiatorPeer.peerId)
+        await nonInitiatorPeer.request(signal, key);
         expect(nonInitiatorPeer.answer).toBeDefined();
     });
 
@@ -67,6 +68,5 @@ describe("Basic Peers Connection", () => {
                 done();
             })
         });
-
     });
 });

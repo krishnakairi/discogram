@@ -1,11 +1,13 @@
 import { IDiscogramConfig, ISignal } from "../constants";
 import Signal from '../models/signal.model';
-import Updates from "../models/updates.model";
 import { TelegramBotService } from "./telegram-bot.service";
+
+const DEFAULT_EXPIRY_IN_MINS = 5;
 
 export default class MessageService {
     private static instance: MessageService;
     private telegramBotService: TelegramBotService;
+    public expiresInMins: number;
 
     public static getInstance(): MessageService {
         if (!MessageService.instance) {
@@ -18,8 +20,10 @@ export default class MessageService {
         this.telegramBotService = new TelegramBotService({
             chennelId: config.channelId,
             senderBotToken: config.senderBotToken,
-            receiverBotToken: config.receiverBotToken
+            receiverBotToken: config.receiverBotToken,
+            expiresInMins: config?.expiresInMins || DEFAULT_EXPIRY_IN_MINS
         });
+        this.expiresInMins = config?.expiresInMins || DEFAULT_EXPIRY_IN_MINS;
     }
 
     async publish(peerId, data) {
@@ -28,13 +32,13 @@ export default class MessageService {
     }
 
     getSignals(): Promise<ISignal[]> {
-        return this.telegramBotService.getUpdates().then((data) => {
-            const updates = new Updates(data);
-            return updates.toSignals();
-        })
+        return this.telegramBotService.getLatestUpdates()
+            .then((updates) => {
+                return updates.toSignals()
+            })
     }
 
-    async getOffer(peerId: string) {
+    async getOffer(peerId: string): Promise<ISignal> {
         const signals = await this.getSignals();
         const offer = signals.find(signal => signal.type === 'offer' && signal.id === peerId);
         if (!offer) {

@@ -2,6 +2,7 @@ export interface IDiscogramConfig {
     channelId: number;
     senderBotToken: string;
     receiverBotToken: string;
+    expiresInMins?: number;
 }
 
 export interface IPeerConfig {
@@ -14,6 +15,7 @@ export interface ITelegramBotsInfo {
     chennelId: number;
     senderBotToken: string;
     receiverBotToken: string;
+    expiresInMins: number;
 }
 
 export interface ISignal {
@@ -21,4 +23,5 @@ export interface ISignal {
     type: string;
     sdp: string;
     key: string;
+    timeStamp: number;
 }
